@@ -14,14 +14,21 @@
     self = [super init];
     if (self) {
         databaseName = dbName;
+        
         databaseTable = tableName;
-        databasePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:databaseName];
+        
+        // Get the path to the documents directory and append the databaseName
+        NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDir = [documentPaths objectAtIndex:0];
+        databasePath = [documentsDir stringByAppendingPathComponent:databaseName];
+        
         NSLog(@"databasePath = %@", databasePath);
     }
     return self;
 }
 
-- (BOOL) checkDatabase{
+
+-(void) checkAndCreateDatabase{
     // Check if the SQL database has already been saved to the users phone, if not then copy it over
     BOOL success;
     
@@ -33,7 +40,15 @@
     success = [fileManager fileExistsAtPath:databasePath];
     
     // If the database already exists then return without doing anything
-    return success;
+    if(success) return;
+    
+    // If not then proceed to copy the database from the application to the users filesystem
+    
+    // Get the path to the database in the application package
+    NSString *databasePathFromApp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:databaseName];
+    
+    // Copy the database from the package to the users filesystem
+    [fileManager copyItemAtPath:databasePathFromApp toPath:databasePath error:nil];
 }
 
 

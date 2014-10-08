@@ -19,6 +19,6 @@
 @property (strong, nonatomic) NSMutableArray *dbItems;
 
 - (id) initWithDBName:(NSString *)dbName tableName:(NSString *)tableName;
-- (BOOL) checkDatabase;
+- (void) checkAndCreateDatabase;
 - (void) readDatabase;
 @end
