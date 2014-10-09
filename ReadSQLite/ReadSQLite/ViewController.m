@@ -19,11 +19,12 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     SQLiteRead *sqlRead = [[SQLiteRead alloc] initWithDBName:@"IRDB.sqlite" tableName:@"ZIRCODETABLE"];
-    [sqlRead checkAndCreateDatabase];
-    [sqlRead readDatabase];
     
-    NSLog(@"dbItems = %@", sqlRead.dbItems);
-    
+    if ([sqlRead checkDatabaseUpdate]) {
+        [sqlRead checkAndCreateDatabase];
+        [sqlRead readDatabase];
+        NSLog(@"dbItems = %@", sqlRead.dbItems);
+    }
 }
 
 - (void)didReceiveMemoryWarning {
